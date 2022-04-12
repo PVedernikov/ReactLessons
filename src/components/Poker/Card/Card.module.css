@@ -1,0 +1,29 @@
+.Card {
+    display: inline-block;
+    width: 60px;
+    height: 80px;
+    border: 1px solid #F3F3F3;
+    border-radius: 6px;
+    font-size: 16pt;
+    background: white;
+    cursor: pointer;
+    padding: 0 5px;
+    font-weight: bold;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI Adjusted", "Segoe UI", "Liberation Sans", sans-serif;
+    /* offset-x | offset-y | blur-radius | spread-radius | color */
+    box-shadow: -1px 1px 1px 0px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+}
+.Card:hover {
+    transform: scale(1.2);
+    /* offset-x | offset-y | blur-radius | spread-radius | color */
+    box-shadow: -5px 5px 4px 0px rgba(0, 0, 0, 0.2);
+}
+
+.Clubs, .C, .Spades, .S{
+    color: black;
+}
+
+.Diamonds, .D, .Hearts, .H {
+    color: red;
+}

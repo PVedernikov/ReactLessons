@@ -6,6 +6,8 @@ import PostForm from './components/PostForm';
 import "./styles/App.css";
 import MySelect from './components/UI/select/MySelect';
 import MyInput from './components/UI/input/MyInput';
+import Card from './components/Poker/Card/Card';
+import DealerButton from './components/Poker/DealerButton/DealerButton';
 
 function App() {
     const [posts, setPosts] = useState([
@@ -71,7 +73,16 @@ function App() {
                 ? <PostList remove={removePost} posts={sortedAndSerachedPosts} title="Посты про JS" />
                 : <h1 style={{ textAlign: 'center' }}>Посты не найдены!</h1>
             }
-            
+
+
+            <Card value='A' suit='H' />
+            <Card value='K' suit='S' />
+            <Card value='8' suit='C' />
+            <Card value='10' suit='S' />
+            <Card value='J' suit='D' />
+            <Card value='Q' suit='H' />
+            <Card value='L' suit='G ' />
+            <DealerButton />
         </div>
     );
 }

@@ -1,0 +1,21 @@
+.dealerButton {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    text-align: center;
+    display: table-cell;
+    box-sizing: border-box;
+    padding-top: 27px;
+    padding-left: 2px;
+    border: 1px solid #F3F3F3;
+    font-weight: bold;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI Adjusted", "Segoe UI", "Liberation Sans", sans-serif;
+    text-transform: uppercase;
+    color: white;
+    background: white;
+    text-shadow:
+        -1px 1px 2px #CCC, -0px 1px 2px #CCC, -1px 0px 2px #CCC, 
+        1px 1px 0px #FCFCFC, 1px -1px 0px #FCFCFC, -1px 1px 0px #FCFCFC, -1px -1px 0px #FCFCFC;
+    box-shadow: -3px 3px 3px #AAA, -2px 2px 2px #AAA, -1px 1px 2px #AAA;
+    cursor: default;
+}
