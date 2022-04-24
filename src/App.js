@@ -3,11 +3,14 @@ import { useRef } from 'react';
 import Counter from "./components/Counter"
 import PostList from './components/PostList';
 import PostForm from './components/PostForm';
+import PostFilter from './components/PostFilter';
 import "./styles/App.css";
 import MySelect from './components/UI/select/MySelect';
 import MyInput from './components/UI/input/MyInput';
+import MyModal from './components/UI/MyModal/MyModal';
 import Card from './components/Poker/Card/Card';
 import DealerButton from './components/Poker/DealerButton/DealerButton';
+import MyButton from './components/UI/button/MyButton';
 
 function App() {
     const [posts, setPosts] = useState([
@@ -16,8 +19,11 @@ function App() {
         { id: 3, title: 'b Javascript 3 ВВВ', body: 'c Всем привет!!!' }
     ]);
 
-    const [selectedSort, setSelectedSort] = useState('');
-    const [searchQuery, setSearchQuery] = useState('');
+    //const [selectedSort, setSelectedSort] = useState('');
+    //const [searchQuery, setSearchQuery] = useState('');
+
+    const [filter, setFilter] = useState({sort: '', query: ''});
+    const [modal, setModal] = useState(false);
 
     //function getSortedPosts() {
     //    console.log('getSortedPosts DONE!');
@@ -29,51 +35,43 @@ function App() {
 
     const sortedPosts = useMemo(() => {
         console.log('getSortedPosts DONE!');
-        if (selectedSort) {
-            return [...posts].sort((a, b) => a[selectedSort].localeCompare(b[selectedSort]));
+        if (filter.sort) {
+            return [...posts].sort((a, b) => a[filter.sort].localeCompare(b[filter.sort]));
         }
         return posts;
-    }, [selectedSort, posts]); //getSortedPosts();
+    }, [filter.sort, posts]); //getSortedPosts();
 
     const sortedAndSerachedPosts = useMemo(() => {
-        return sortedPosts.filter(post => post.title.toLowerCase().includes(searchQuery.toLowerCase()));
-    }, [searchQuery, sortedPosts]);
+        return sortedPosts.filter(post => post.title.toLowerCase().includes(filter.query.toLowerCase()));
+    }, [filter.query, sortedPosts]);
 
     const createPost = (newPost) => {
         setPosts([...posts, newPost]);
+        setModal(false);
     }
 
     const removePost = (post) => {
         setPosts(posts.filter(p => p.id !== post.id));
     }
-    const sortPosts = (sort) => {
-        setSelectedSort(sort);
-        //setPosts([...posts].sort((a, b) => a[sort].localeCompare(b[sort])));
-    }
+    //const sortPosts = (sort) => {
+    //    setSelectedSort(sort);
+    //    //setPosts([...posts].sort((a, b) => a[sort].localeCompare(b[sort])));
+    //}
 
     return (
         <div className="App">
-            <PostForm create={createPost} />
+            <MyButton style={{ marginTop: 30}} onClick={() => setModal(true)}>
+                Создать
+            </MyButton>
+            <MyModal visible={modal} setVisible={setModal}>
+                <PostForm create={createPost} />
+            </MyModal>
             <hr style={{ margin: '15px 0' }} />
-            <MyInput
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                placeholder="Поиск..."
+            <PostFilter
+                filter={filter}
+                setFilter={setFilter}
             />
-            <MySelect
-                value={selectedSort}
-                onChange={sortPosts}
-                defaultValue="Сортировка по"
-                options={[
-                    {value: 'title', name: 'По названию'},
-                    {value: 'body', name: 'По описанию'},
-                ]}
-            />
-            {sortedAndSerachedPosts.length > 0
-                ? <PostList remove={removePost} posts={sortedAndSerachedPosts} title="Посты про JS" />
-                : <h1 style={{ textAlign: 'center' }}>Посты не найдены!</h1>
-            }
-
+            <PostList remove={removePost} posts={sortedAndSerachedPosts} title="Посты про JS" />
 
             <Card value='A' suit='H' />
             <Card value='K' suit='S' />

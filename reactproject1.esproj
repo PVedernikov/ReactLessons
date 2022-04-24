@@ -14,7 +14,6 @@
     <Folder Include="src\components\Poker\Card\" />
     <Folder Include="src\components\Poker\DealerButton\" />
     <Folder Include="src\components\UI\button\" />
-    <Folder Include="src\components\UI\input\" />
     <Folder Include="src\styles\" />
   </ItemGroup>
   <!-- This target is copied from the ASP.NET SPA template in order to ensure node_modules are in place. -->
