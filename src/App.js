@@ -12,6 +12,8 @@ import Card from './components/Poker/Card/Card';
 import DealerButton from './components/Poker/DealerButton/DealerButton';
 import MyButton from './components/UI/button/MyButton';
 
+// PS D:\Projects\reactproject1> npm install react-transition-group --save
+
 function App() {
     const [posts, setPosts] = useState([
         { id: 1, title: 'c Javascript 1 ааАААА', body: 'a Всем привет!!!' },
