@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useRef } from 'react';
 import Counter from "./components/Counter"
 import PostList from './components/PostList';
@@ -11,45 +11,44 @@ import MyModal from './components/UI/MyModal/MyModal';
 import Card from './components/Poker/Card/Card';
 import DealerButton from './components/Poker/DealerButton/DealerButton';
 import MyButton from './components/UI/button/MyButton';
+import { usePosts } from './hooks/usePosts';
+import axios from 'axios';
+import PostService from './API/PostService';
 
 // PS D:\Projects\reactproject1> npm install react-transition-group --save
+// PS D:\Projects\reactproject1> npm i axios
 
 function App() {
-    const [posts, setPosts] = useState([
-        { id: 1, title: 'c Javascript 1 ааАААА', body: 'a Всем привет!!!' },
-        { id: 2, title: 'a Javascript 222 ббб', body: 'b Всем привет!!!' },
-        { id: 3, title: 'b Javascript 3 ВВВ', body: 'c Всем привет!!!' }
-    ]);
+    const [posts, setPosts] = useState([]);
 
     //const [selectedSort, setSelectedSort] = useState('');
     //const [searchQuery, setSearchQuery] = useState('');
 
     const [filter, setFilter] = useState({sort: '', query: ''});
     const [modal, setModal] = useState(false);
+    const sortedAndSerachedPosts = usePosts(posts, filter.sort, filter.query);
+    const [isPostsLoading, setIsPostsLoading] = useState(false);
 
-    //function getSortedPosts() {
-    //    console.log('getSortedPosts DONE!');
-    //    if (selectedSort) {
-    //        return [...posts].sort((a, b) => a[selectedSort].localeCompare(b[selectedSort]));
-    //    }
-    //    return posts;
-    //}
+    useEffect(() => {
+        fetchPosts();
 
-    const sortedPosts = useMemo(() => {
-        console.log('getSortedPosts DONE!');
-        if (filter.sort) {
-            return [...posts].sort((a, b) => a[filter.sort].localeCompare(b[filter.sort]));
-        }
-        return posts;
-    }, [filter.sort, posts]); //getSortedPosts();
-
-    const sortedAndSerachedPosts = useMemo(() => {
-        return sortedPosts.filter(post => post.title.toLowerCase().includes(filter.query.toLowerCase()));
-    }, [filter.query, sortedPosts]);
+        //return () => {
+        //    // this will work on unmount
+        //};
+    }, []); // if empty [] - will work once on mount
 
     const createPost = (newPost) => {
         setPosts([...posts, newPost]);
         setModal(false);
+    }
+
+    async function fetchPosts() {
+        setIsPostsLoading(true);
+        setTimeout(async () => {
+            const posts = await PostService.getAll(); // axios.get('https://jsonplaceholder.typicode.com/posts');
+            setPosts(posts);
+            setIsPostsLoading(false);
+        }, 1000);
     }
 
     const removePost = (post) => {
@@ -62,6 +61,7 @@ function App() {
 
     return (
         <div className="App">
+            {/*<button onClick={fetchPosts}>GET POSTS</button>*/}
             <MyButton style={{ marginTop: 30}} onClick={() => setModal(true)}>
                 Создать
             </MyButton>
@@ -73,7 +73,11 @@ function App() {
                 filter={filter}
                 setFilter={setFilter}
             />
-            <PostList remove={removePost} posts={sortedAndSerachedPosts} title="Посты про JS" />
+            {isPostsLoading
+                ? <h1>Загрузка...</h1>
+                : <PostList remove={removePost} posts={sortedAndSerachedPosts} title="Посты про JS" />
+            }
+            
 
             <Card value='A' suit='H' />
             <Card value='K' suit='S' />
