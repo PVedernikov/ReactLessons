@@ -64,8 +64,6 @@ function Posts() {
         setTotalPages(getPageCount(totalCount, limit));
     });
 
-    console.log(totalPages);
-
     useEffect(() => {
         fetchPosts();
 

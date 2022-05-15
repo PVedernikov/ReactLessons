@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.7-alpha">
+﻿<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.7-alpha">
   <PropertyGroup Label="Globals">
     <ProjectGuid>442f5e1f-81e1-4499-ac86-3857cfefdbf1</ProjectGuid>
   </PropertyGroup>
@@ -15,6 +15,7 @@
     <Folder Include="src\components\Poker\DealerButton\" />
     <Folder Include="src\components\UI\button\" />
     <Folder Include="src\components\UI\Loader\" />
+    <Folder Include="src\components\UI\Navbar\" />
     <Folder Include="src\hooks\" />
     <Folder Include="src\API\" />
     <Folder Include="src\pages\" />
