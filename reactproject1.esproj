@@ -17,6 +17,7 @@
     <Folder Include="src\components\UI\Loader\" />
     <Folder Include="src\hooks\" />
     <Folder Include="src\API\" />
+    <Folder Include="src\pages\" />
     <Folder Include="src\utils\" />
     <Folder Include="src\styles\" />
   </ItemGroup>
