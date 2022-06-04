@@ -18,7 +18,8 @@
     <Folder Include="src\components\UI\Navbar\" />
     <Folder Include="src\hooks\" />
     <Folder Include="src\API\" />
-    <Folder Include="src\pages\" />
+    <Folder Include="src\context\" />
+    <Folder Include="src\router\" />
     <Folder Include="src\utils\" />
     <Folder Include="src\styles\" />
   </ItemGroup>

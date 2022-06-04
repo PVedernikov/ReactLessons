@@ -1,23 +1,4 @@
-////import React, { useState, useMemo, useEffect } from 'react';
-////import { useRef } from 'react';
-////import Counter from "./components/Counter"
-////import PostList from './components/PostList';
-////import PostForm from './components/PostForm';
-////import PostFilter from './components/PostFilter';
-////import "./styles/App.css";
-////import MySelect from './components/UI/select/MySelect';
-////import MyInput from './components/UI/input/MyInput';
-////import MyModal from './components/UI/MyModal/MyModal';
-////import Card from './components/Poker/Card/Card';
-////import DealerButton from './components/Poker/DealerButton/DealerButton';
-////import MyButton from './components/UI/button/MyButton';
-////import { usePosts } from './hooks/usePosts';
-////import axios from 'axios';
-////import PostService from './API/PostService';
-////import Loader from './components/UI/Loader/Loader';
-////import { useFetching } from './hooks/useFetching';
 import { getPageCount, getPagesArray } from "../utils/pages";
-
 import React, { useEffect, useRef, useState } from 'react';
 import PostService from "../API/PostService";
 import { usePosts } from "../hooks/usePosts";
@@ -32,6 +13,7 @@ import Loader from "../components/UI/Loader/Loader";
 //import Pagination from "../components/UI/pagination/Pagination";
 //import { useObserver } from "../hooks/useObserver";
 import MySelect from "../components/UI/select/MySelect";
+import { useObserver } from "../hooks/useObserver";
 
 // PS D:\Projects\reactproject1> npm install react-transition-group --save
 // PS D:\Projects\reactproject1> npm i axios
@@ -47,7 +29,9 @@ function Posts() {
     const [totalPages, setTotalPages] = useState(0);
     const [limit, setLimit] = useState(10);
     const [page, setPage] = useState(1);
-    const sortedAndSerachedPosts = usePosts(posts, filter.sort, filter.query);
+    const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
+    const lastElement = useRef();
+    //const observer = useRef();
 
     let pagesArray = getPagesArray(totalPages);
 
@@ -58,10 +42,46 @@ function Posts() {
     //const [isPostsLoading, setIsPostsLoading] = useState(false);
     const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
         const response = await PostService.getAll(limit, page); // axios.get('https://jsonplaceholder.typicode.com/posts');
-        setPosts(response.data);
+        setPosts([...posts, ...response.data]);
         const totalCount = response.headers['x-total-count'];
 
         setTotalPages(getPageCount(totalCount, limit));
+    });
+
+    //useEffect(() => {
+    //    var options = {
+    //        root: document.querySelector('#scrollArea'),
+    //        rootMargin: '0px',
+    //        threshold: 1.0
+    //    }
+    //    var callback = function (entries, observer) {
+    //        /* Content excerpted, show below */
+    //    };
+    //    var observer = new IntersectionObserver(callback, options);
+    //}, []);
+
+    //// отслеживание видимости элемента в окне браузера
+    //useEffect(() => {
+    //    // номер страницы page замыкается внутри callback, чтобы этого не произошло передаем isPostsLoading ниже в массив зависимостей 1*
+    //    // но тогда новые обзерверы будут создаваться каждый раз при изменении isPostsLoading и будет хаос
+    //    // поэтому старые обзерверы отключаем
+
+    //    if (isPostsLoading) return; // обзервер создается только когда загрузка закончилась
+    //    if (observer.current) observer.current.disconnect(); // старые обзерверы отключаем
+    //    var callback = function (entries, observer) {
+    //        // callback отрабатывает и когда элемент становится видимым и когда пропадает из зоны видимости, поэтому нужна проверка
+    //        if (entries[0].isIntersecting && page < totalPages) {
+    //            console.log(page);
+    //            setPage(page + 1);
+    //        }
+    //    };
+    //    observer.current = new IntersectionObserver(callback);
+    //    observer.current.observe(lastElement.current);
+    //}, [isPostsLoading]); // <--- 1* сюда
+    // ↑ переехало в хук useObserver
+
+    useObserver(lastElement, page < totalPages, isPostsLoading, () => {
+        setPage(page + 1);
     });
 
     useEffect(() => {
@@ -70,7 +90,7 @@ function Posts() {
         //return () => {
         //    // this will work on unmount
         //};
-    }, [page]); // if empty [] - will work once on mount
+    }, [page, limit]); // if empty [] - will work once on mount
 
     const createPost = (newPost) => {
         setPosts([...posts, newPost]);
@@ -112,12 +132,23 @@ function Posts() {
                 filter={filter}
                 setFilter={setFilter}
             />
+            <MySelect value={limit}
+                onChange={value => setLimit(value)}
+                defaultValue="Количество элементов на странице"
+                options={[
+                    {value: 5, name: '5'},
+                    {value: 10, name: '10'},
+                    {value: 25, name: '25'},
+                    {value: -1, name: 'все'},
+                ]}
+            />
             {postError &&
                 <h1>Произошла ошибка ${postError}</h1>
             }
-            {isPostsLoading
-                ? <div style={{ display: 'flex', justifyContent: 'center', marginTop: 50 }}><Loader /></div>
-                : <PostList remove={removePost} posts={sortedAndSerachedPosts} title="Посты про JS" />
+            <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Посты про JS" />
+            <div ref={lastElement} style={{height: 20, background: 'red'}} />
+            {isPostsLoading &&
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: 50 }}><Loader /></div>
             }
             <div className="page__wrapper">
                 {pagesArray.map(p =>
